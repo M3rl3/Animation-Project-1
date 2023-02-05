@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Shader Manager">
+      <UniqueIdentifier>{fa5d6f5f-2427-445b-9c1d-4184d8a14e42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VAO Manager">
+      <UniqueIdentifier>{449f25b8-ed1b-49dc-a78c-2f22f5762838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture Manager">
+      <UniqueIdentifier>{e82a7abe-2641-49fc-a3bd-fdec225be037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model Loader">
+      <UniqueIdentifier>{b0fa4bbd-defc-49bc-ab49-189313461979}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh Class">
+      <UniqueIdentifier>{646a1679-cf7e-4e8c-bf0c-622b8b697337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File Stream">
+      <UniqueIdentifier>{31732d75-2343-4a42-9df3-8deee1b88e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bounding Box">
+      <UniqueIdentifier>{012ec659-746a-4ffd-b313-2b9606d93b1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animations">
+      <UniqueIdentifier>{58e6523f-8c3e-4e6c-97bf-0431542ef92c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cShaderManager\cShader.cpp">
+      <Filter>Shader Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cShaderManager\cShaderManager.cpp">
+      <Filter>Shader Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cVAOManager\cVAOManager.cpp">
+      <Filter>VAO Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cBasicTextureManager\CTextureFromBMP.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadModel.cpp">
+      <Filter>Model Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="cMeshInfo.cpp">
+      <Filter>Mesh Class</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawBoundingBox.cpp">
+      <Filter>Bounding Box</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cShaderManager\cShaderManager.h">
+      <Filter>Shader Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cVAOManager\cVAOManager.h">
+      <Filter>VAO Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cBasicTextureManager\C24BitBMPpixel.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cBasicTextureManager\cBasicTextureManager.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cBasicTextureManager\CTextureFromBMP.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadModel.h">
+      <Filter>Model Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="cMeshInfo.h">
+      <Filter>Mesh Class</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawBoundingBox.h">
+      <Filter>Bounding Box</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Animations</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readFile.txt">
+      <Filter>File Stream</Filter>
+    </Text>
+    <Text Include="sceneDescription.txt">
+      <Filter>File Stream</Filter>
+    </Text>
+    <Text Include="cameraEye.txt">
+      <Filter>File Stream</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

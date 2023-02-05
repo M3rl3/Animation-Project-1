@@ -1,0 +1,9 @@
+../assets/meshes/bulb.ply
+../assets/meshes/pyramid.ply
+../assets/meshes/cube.ply
+../assets/meshes/BeholderSketchfab_xyz_n_rgba_uv.ply
+../assets/meshes/terrain.ply
+../assets/meshes/moon.ply
+../assets/meshes/skybox_sphere.ply
+../assets/meshes/sphere.ply
+../assets/meshes/steve.ply
