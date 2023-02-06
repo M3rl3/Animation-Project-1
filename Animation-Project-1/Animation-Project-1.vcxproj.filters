@@ -37,6 +37,9 @@
     <Filter Include="Animations">
       <UniqueIdentifier>{58e6523f-8c3e-4e6c-97bf-0431542ef92c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation Manager">
+      <UniqueIdentifier>{86bd8867-cbb3-45fc-a410-2478c626398e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cShaderManager\cShader.cpp">
@@ -72,6 +75,9 @@
     <ClCompile Include="DrawBoundingBox.cpp">
       <Filter>Bounding Box</Filter>
     </ClCompile>
+    <ClCompile Include="cAnimationManager.cpp">
+      <Filter>Animation Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager\cShaderManager.h">
@@ -103,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimationManager.h">
+      <Filter>Animation Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

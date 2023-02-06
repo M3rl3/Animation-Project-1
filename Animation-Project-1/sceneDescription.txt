@@ -1,4 +1,4 @@
-9
+10
 
 bulb
 position -220.0 30.0 0.0
@@ -16,9 +16,9 @@ rotation 0.0 67.55 0.0
 scale 1.0 1.0 1.0
 
 player
-position -245.0 5.0 -115.0
+position 0.0 5.0 0.0
 rotation 0.0 67.55 0.0
-scale 0.25 0.25 0.25
+scale 1.0 1.0 1.0
 
 moon
 position -180.0 370.0 400.0
@@ -26,16 +26,21 @@ rotation 0.0 0.0 0.0
 scale 20.0 20.0 20.0
 
 theAI
-position -220.0 5.0 -115.0
+position 0.0 10.0 0.0
 rotation 0.0 67.55 0.0
-scale 0.25 0.25 0.25
+scale 1.0 1.0 1.0
 
 theAI1
-position -240.0 5.0 -105.0
+position 0.0 10.0 0.0
 rotation 0.0 67.55 0.0
-scale 0.25 0.25 0.25
+scale 1.0 1.0 1.0
 
 theAI2
-position -230.0 5.0 -95.0
+position 0.0 10.0 0.0
 rotation 0.0 67.55 0.0
-scale 0.25 0.25 0.25
+scale 1.0 1.0 1.0
+
+theAI3
+position 0.0 10.0 0.0
+rotation 0.0 67.55 0.0
+scale 1.0 1.0 1.0

@@ -7,6 +7,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include "Particle.h"
+#include "Animation.h"
 #include "cVAOManager/cVAOManager.h"
 
 class cMeshInfo {
@@ -45,6 +46,7 @@ public:
 	bool isTerrainMesh;
 	bool isSkyBoxMesh;
 	bool hasChildMeshes;
+	bool isAnimated;
 
 	int nTriangles;
 	int nIndices;
@@ -54,6 +56,7 @@ public:
 	float textureRatios[8];
 
 	Particle* particle;
+	Animation animation;
 
 	std::vector <glm::vec3> vertices;
 	std::vector <glm::vec3> indices;

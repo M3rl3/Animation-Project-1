@@ -12,6 +12,7 @@
 #include "cShaderManager/cShaderManager.h"
 #include "cVAOManager/cVAOManager.h"
 #include "cBasicTextureManager/cBasicTextureManager.h"
+#include "cAnimationManager.h"
 
 #include <iostream>
 #include <sstream>
@@ -26,6 +27,7 @@ GLuint shaderID = 0;
 
 cVAOManager* VAOMan;
 cBasicTextureManager* TextureMan;
+cAnimationManager AnimeMan;
 
 sModelDrawInfo player_obj;
 
@@ -49,6 +51,7 @@ std::vector <cMeshInfo*> waypoints;
 
 void ReadFromFile();
 void ReadSceneDescription();
+void LoadAnimations();
 void ManageLights();
 float RandomFloat(float a, float b);
 bool RandomizePositions(cMeshInfo* mesh);
@@ -134,7 +137,6 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     */
     if (key == GLFW_KEY_U && action == GLFW_PRESS) {
         ReadSceneDescription();
-        player_mesh->particle->position = player_mesh->position;
     }
     if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
         enableMouse = !enableMouse;
@@ -273,6 +275,17 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
             if (key == GLFW_KEY_E && action == GLFW_RELEASE) {
                 player_mesh->KillAllForces();
             }
+
+            if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS) {
+                player_mesh->animation.AnimationType = "Ease-In Animation";
+                player_mesh->animation.AnimationTime = 20.f;
+            }
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+                player_mesh->animation.Speed += 1.f;
+            }
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+                player_mesh->animation.Speed -= 1.f;
+            }
         }
         break;
     }
@@ -349,10 +362,10 @@ void Initialize() {
     glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-    window = glfwCreateWindow(1366, 768, "AI", NULL, NULL);
+    window = glfwCreateWindow(1366, 768, "Man", NULL, NULL);
 
     // Uncomment for fullscreen support based on current monitor
-    // window = glfwCreateWindow(mode->height, mode->width, "Physics 3", currentMonitor, NULL);
+    // window = glfwCreateWindow(mode->height, mode->width, "Man", currentMonitor, NULL);
     
     if (!window) {
         std::cerr << "Window creation failed." << std::endl;
@@ -423,6 +436,9 @@ void Render() {
     // Load asset paths from external file
     ReadFromFile();
 
+    // Load animations
+    LoadAnimations();
+
     // VAO Manager
     VAOMan = new cVAOManager();
     
@@ -452,6 +468,7 @@ void Render() {
     terrain_mesh->doNotLight = false;
     terrain_mesh->useRGBAColour = true;
     terrain_mesh->isTerrainMesh = false;
+    terrain_mesh->isVisible = false;
     meshArray.push_back(terrain_mesh);
 
     sModelDrawInfo flat_plain_obj;
@@ -466,7 +483,7 @@ void Render() {
     flat_plain->useRGBAColour = true;
     meshArray.push_back(flat_plain);
 
-    LoadModel(meshFiles[8], player_obj);
+    LoadModel(meshFiles[7], player_obj);
     if (!VAOMan->LoadModelIntoVAO("player", player_obj, shaderID)) {
         std::cerr << "Could not load model into VAO" << std::endl;
     }
@@ -514,10 +531,13 @@ void Render() {
         cMeshInfo* theAI = new cMeshInfo();
         theAI->meshName = "player";
         theAI->friendlyName = "theAI";
-        theAI->useRGBAColour = false;
-        theAI->hasTexture = true;
-        theAI->textures[0] = "ai-notes.bmp";
-        theAI->textureRatios[0] = 1.f;
+        theAI->useRGBAColour = true;
+        theAI->RGBAColour = glm::vec4(100, 0, 0, 1);
+        theAI->animation.AnimationTime = 5.f;
+        theAI->animation.IsLooping = true;
+        theAI->animation.IsPlaying = true;
+        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.Speed = 1.f;
         meshArray.push_back(theAI);
     }
     
@@ -525,10 +545,13 @@ void Render() {
         cMeshInfo* theAI = new cMeshInfo();
         theAI->meshName = "player";
         theAI->friendlyName = "theAI1";
-        theAI->useRGBAColour = false;
-        theAI->hasTexture = true;
-        theAI->textures[0] = "moon_texture.bmp";
-        theAI->textureRatios[0] = 1.f;
+        theAI->useRGBAColour = true;
+        theAI->RGBAColour = glm::vec4(0, 100, 0, 1);
+        theAI->animation.AnimationTime = 10.f;
+        theAI->animation.IsLooping = true;
+        theAI->animation.IsPlaying = true;
+        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.Speed = 1.f;
         meshArray.push_back(theAI);
     }
     
@@ -536,13 +559,29 @@ void Render() {
         cMeshInfo* theAI = new cMeshInfo();
         theAI->meshName = "player";
         theAI->friendlyName = "theAI2";
-        theAI->useRGBAColour = false;
-        theAI->hasTexture = true;
-        theAI->textures[0] = "mememan.bmp";
-        theAI->textureRatios[0] = 1.f;
+        theAI->useRGBAColour = true;
+        theAI->RGBAColour = glm::vec4(0, 0, 100, 1);
+        theAI->animation.AnimationTime = 15.f;
+        theAI->animation.IsLooping = true;
+        theAI->animation.IsPlaying = true;
+        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.Speed = 1.f;
         meshArray.push_back(theAI);
     }
     
+    {
+        cMeshInfo* theAI = new cMeshInfo();
+        theAI->meshName = "player";
+        theAI->friendlyName = "theAI3";
+        theAI->useRGBAColour = true;
+        theAI->RGBAColour = glm::vec4(100, 100, 0, 1);
+        theAI->animation.AnimationTime = 20.f;
+        theAI->animation.IsLooping = true;
+        theAI->animation.IsPlaying = true;
+        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.Speed = 1.f;
+        meshArray.push_back(theAI);
+    }
 
     // skybox/cubemap textures
     std::cout << "\nLoading Textures...";
@@ -655,10 +694,6 @@ void Update() {
 
     GLint eyeLocationLocation = glGetUniformLocation(shaderID, "eyeLocation");
     glUniform4f(eyeLocationLocation, cameraEye.x, cameraEye.y, cameraEye.z, 1.f);
-
-    currentTime = glfwGetTime();
-    timeDiff = currentTime - beginTime;
-    frameCount++;
 
     if (theEditMode == TAKE_CONTROL) {
         cameraEye = player_mesh->position - glm::vec3(35.f, -4.f, 0.f);
@@ -877,6 +912,10 @@ void Update() {
     glfwSwapBuffers(window);
     glfwPollEvents();
 
+    currentTime = glfwGetTime();
+    timeDiff = currentTime - beginTime;
+    frameCount++;
+
     //const GLubyte* vendor = glad_glGetString(GL_VENDOR); // Returns the vendor
     const GLubyte* renderer = glad_glGetString(GL_RENDERER); // Returns a hint to the model
 
@@ -894,6 +933,8 @@ void Update() {
         beginTime = currentTime;
         frameCount = 0;
     }
+
+    AnimeMan.Update(meshArray, 0.1f);
 }
 
 void Shutdown() {
@@ -916,6 +957,21 @@ void ReadFromFile() {
         meshFiles.push_back(input0);
         readIndex++;
     }  
+}
+
+void LoadAnimations() {
+    AnimationData yeezin;
+    //yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 0.0f), 0.0f, EaseInOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 0.f, EaseInOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, -10.0f), 5.f, EaseInOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(-10.0f, 5.0f, 0.0f), 10.f, EaseInOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 10.0f), 15.f, EaseInOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 20.f, EaseInOut));
+    //yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 0.0f), 30.f, EaseInOut));
+    yeezin.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, EaseInOut));
+    yeezin.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.0f, true));
+    yeezin.Duration = 20.f;
+    AnimeMan.LoadAnimation("Ease-InOut Animation", yeezin);
 }
 
 // All lights managed here

@@ -18,6 +18,7 @@ cMeshInfo::cMeshInfo() {
 	this->hasTexture = false;
 	this->isSkyBoxMesh = false;
 	this->hasChildMeshes = false;
+	this->isAnimated = false;
 	this->radius = 7.f;
 	this->min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
 	this->max = glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN);
