@@ -90,6 +90,7 @@ void cAnimationManager::Update(const std::vector<cMeshInfo*>& meshObjects, float
 				mesh->position = GetAnimationPosition(itFind->second, animation.AnimationTime);
 				mesh->scale = GetAnimationScale(itFind->second, animation.AnimationTime);
 				mesh->rotation = GetAnimationRotation(itFind->second, animation.AnimationTime);
+				mesh->currentEasing = GetAnimationEasing(itFind->second, animation.AnimationTime);
 			}
 		}
 	}
@@ -166,6 +167,15 @@ glm::vec3 cAnimationManager::GetAnimationPosition(const AnimationData& animation
 	glm::vec3 result = glm::mix(positionKeyFrame.value, nextPositionKeyFrame.value, ratio);
 
 	return result;
+}
+
+EasingType cAnimationManager::GetAnimationEasing(const AnimationData& animation, float time) 
+{	
+	if (animation.PositionKeyFrames.size() != 0) {
+		int positionKeyFrameIndex = FindPositionKeyFrameIndex(animation, time);
+		EasingType easing = animation.PositionKeyFrames[positionKeyFrameIndex].type;
+		return easing;
+	}
 }
 
 glm::vec3 cAnimationManager::GetAnimationScale(const AnimationData& animation, float time)

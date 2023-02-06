@@ -57,6 +57,7 @@ public:
 
 	Particle* particle;
 	Animation animation;
+	EasingType currentEasing;
 
 	std::vector <glm::vec3> vertices;
 	std::vector <glm::vec3> indices;

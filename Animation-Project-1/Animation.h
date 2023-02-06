@@ -57,4 +57,6 @@ struct Animation
 	bool IsPlaying;
 	bool IsLooping;
 	float Speed;
+
+	EasingType currentEasing;
 };

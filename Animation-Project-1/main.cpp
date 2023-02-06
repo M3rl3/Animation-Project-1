@@ -490,9 +490,9 @@ void Render() {
     player_mesh = new cMeshInfo();
     player_mesh->meshName = "player";
     player_mesh->friendlyName = "player";
-    player_mesh->hasTexture = true;
-    player_mesh->RGBAColour = glm::vec4(200.f, 20.f, 200.f, 1.f);
-    player_mesh->useRGBAColour = false;
+    player_mesh->hasTexture = false;
+    player_mesh->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+    player_mesh->useRGBAColour = true;
     player_mesh->drawBBox = true;
     player_mesh->textures[0] = "man.bmp";
     player_mesh->textureRatios[0] = 1.f;
@@ -532,10 +532,11 @@ void Render() {
         theAI->meshName = "player";
         theAI->friendlyName = "theAI";
         theAI->useRGBAColour = true;
-        theAI->RGBAColour = glm::vec4(100, 0, 0, 1);
+        theAI->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
         theAI->animation.AnimationTime = 5.f;
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
+        theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
         theAI->animation.Speed = 1.f;
         meshArray.push_back(theAI);
@@ -546,10 +547,11 @@ void Render() {
         theAI->meshName = "player";
         theAI->friendlyName = "theAI1";
         theAI->useRGBAColour = true;
-        theAI->RGBAColour = glm::vec4(0, 100, 0, 1);
+        theAI->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
         theAI->animation.AnimationTime = 10.f;
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
+        theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
         theAI->animation.Speed = 1.f;
         meshArray.push_back(theAI);
@@ -560,10 +562,11 @@ void Render() {
         theAI->meshName = "player";
         theAI->friendlyName = "theAI2";
         theAI->useRGBAColour = true;
-        theAI->RGBAColour = glm::vec4(0, 0, 100, 1);
+        theAI->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
         theAI->animation.AnimationTime = 15.f;
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
+        theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
         theAI->animation.Speed = 1.f;
         meshArray.push_back(theAI);
@@ -574,10 +577,11 @@ void Render() {
         theAI->meshName = "player";
         theAI->friendlyName = "theAI3";
         theAI->useRGBAColour = true;
-        theAI->RGBAColour = glm::vec4(100, 100, 0, 1);
+        theAI->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
         theAI->animation.AnimationTime = 20.f;
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
+        theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
         theAI->animation.Speed = 1.f;
         meshArray.push_back(theAI);
@@ -821,6 +825,25 @@ void Update() {
             glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
         }
 
+        if (currentMesh->isAnimated) 
+        {
+            switch (currentMesh->currentEasing)
+            {
+            case EaseIn: 
+                currentMesh->RGBAColour = glm::vec4(100.f, 0.f, 0.f, 1.f);
+                break;
+            case EaseOut: 
+                currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 0.f, 1.f);
+                break;
+            case EaseInOut: 
+                currentMesh->RGBAColour = glm::vec4(0.f, 100.f, 0.f, 1.f);
+                break;
+            default:
+                currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+                break;
+            }
+        }
+
         // Uncomment to:
         // Randomize the positions of ALL the objects
         // in the scene post every x amount of frames
@@ -961,14 +984,12 @@ void ReadFromFile() {
 
 void LoadAnimations() {
     AnimationData yeezin;
-    //yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 0.0f), 0.0f, EaseInOut));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 0.f, EaseInOut));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, -10.0f), 5.f, EaseInOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 0.f, EaseIn));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, -10.0f), 5.f, EaseIn));
     yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(-10.0f, 5.0f, 0.0f), 10.f, EaseInOut));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 10.0f), 15.f, EaseInOut));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 20.f, EaseInOut));
-    //yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 0.0f), 30.f, EaseInOut));
-    yeezin.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, EaseInOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 10.0f), 15.f, EaseOut));
+    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 20.f, EaseOut));
+    yeezin.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, None));
     yeezin.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.0f, true));
     yeezin.Duration = 20.f;
     AnimeMan.LoadAnimation("Ease-InOut Animation", yeezin);
