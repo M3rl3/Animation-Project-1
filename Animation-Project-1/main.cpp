@@ -90,6 +90,9 @@ float currentTime = 0.f;
 float timeDiff = 0.f;
 int frameCount = 0;
 
+float collectiveSpeed = 0.f;
+float temp = 0.f;
+
 static void ErrorCallback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
@@ -135,11 +138,33 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     *    updates translation of all objects in the scene based on changes made to scene 
     *    description files, resets everything if no changes were made
     */
-    if (key == GLFW_KEY_U && action == GLFW_PRESS) {
-        ReadSceneDescription();
-    }
     if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
         enableMouse = !enableMouse;
+    }
+    if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+        collectiveSpeed = 1.f;
+    }
+    if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
+        collectiveSpeed = 2.f;
+    }
+    if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+        collectiveSpeed = 3.f;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
+        collectiveSpeed = 4.f;
+    }
+    if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
+        collectiveSpeed = 5.f;
+    }
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        temp = collectiveSpeed;
+        collectiveSpeed = 0.f;
+    }
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
+        collectiveSpeed = temp;
+    }
+    if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_RELEASE) {
+        collectiveSpeed *= -1;
     }
 
     switch (theEditMode)
@@ -170,11 +195,6 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
             if (key == GLFW_KEY_E)     // Up
             {
                 ::cameraEye.y += CAMERA_MOVE_SPEED;
-            }
-
-            if (key == GLFW_KEY_1)
-            {
-                ::cameraEye = glm::vec3(0.f, 0.f, -5.f);
             }
         }
         break;
@@ -526,7 +546,7 @@ void Render() {
     skybox_sphere_mesh->friendlyName = "skybox_sphere";
     skybox_sphere_mesh->isSkyBoxMesh = true;
     meshArray.push_back(skybox_sphere_mesh);
-    
+
     {
         cMeshInfo* theAI = new cMeshInfo();
         theAI->meshName = "player";
@@ -538,7 +558,7 @@ void Render() {
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
-        theAI->animation.Speed = 1.f;
+        theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
     
@@ -553,7 +573,7 @@ void Render() {
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
-        theAI->animation.Speed = 1.f;
+        theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
     
@@ -568,7 +588,7 @@ void Render() {
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
-        theAI->animation.Speed = 1.f;
+        theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
     
@@ -583,7 +603,7 @@ void Render() {
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
         theAI->animation.AnimationType = "Ease-InOut Animation";
-        theAI->animation.Speed = 1.f;
+        theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
 
@@ -827,6 +847,10 @@ void Update() {
 
         if (currentMesh->isAnimated) 
         {
+            currentMesh->animation.Speed = collectiveSpeed;
+            /*if (collectiveSpeed != 0.f) {
+                temp = collectiveSpeed;
+            }*/
             switch (currentMesh->currentEasing)
             {
             case EaseIn: 
