@@ -164,7 +164,7 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
         collectiveSpeed = temp;
     }
     if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_RELEASE) {
-        collectiveSpeed *= -1;
+        collectiveSpeed *= -1.f;
     }
 
     switch (theEditMode)
@@ -294,17 +294,6 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
             }
             if (key == GLFW_KEY_E && action == GLFW_RELEASE) {
                 player_mesh->KillAllForces();
-            }
-
-            if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS) {
-                player_mesh->animation.AnimationType = "Ease-In Animation";
-                player_mesh->animation.AnimationTime = 20.f;
-            }
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-                player_mesh->animation.Speed += 1.f;
-            }
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-                player_mesh->animation.Speed -= 1.f;
             }
         }
         break;
@@ -557,7 +546,7 @@ void Render() {
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
-        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.AnimationType = "Animation0";
         theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
@@ -572,7 +561,7 @@ void Render() {
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
-        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.AnimationType = "Animation0";
         theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
@@ -587,7 +576,7 @@ void Render() {
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
-        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.AnimationType = "Animation0";
         theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
@@ -602,7 +591,43 @@ void Render() {
         theAI->animation.IsLooping = true;
         theAI->animation.IsPlaying = true;
         theAI->isAnimated = true;
-        theAI->animation.AnimationType = "Ease-InOut Animation";
+        theAI->animation.AnimationType = "Animation0";
+        theAI->animation.Speed = collectiveSpeed;
+        meshArray.push_back(theAI);
+    }
+
+    sModelDrawInfo cube_obj;
+    LoadModel(meshFiles[2], cube_obj);
+    if (!VAOMan->LoadModelIntoVAO("cube", cube_obj, shaderID)) {
+        std::cerr << "Could not load model into VAO" << std::endl;
+    }
+    
+    {
+        cMeshInfo* theAI = new cMeshInfo();
+        theAI->meshName = "cube";
+        theAI->friendlyName = "theAI4";
+        theAI->useRGBAColour = true;
+        theAI->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+        theAI->animation.AnimationTime = 0.f;
+        theAI->animation.IsLooping = true;
+        theAI->animation.IsPlaying = true;
+        theAI->isAnimated = true;
+        theAI->animation.AnimationType = "Animation1";
+        theAI->animation.Speed = collectiveSpeed;
+        meshArray.push_back(theAI);
+    }
+    
+    {
+        cMeshInfo* theAI = new cMeshInfo();
+        theAI->meshName = "cube";
+        theAI->friendlyName = "theAI5";
+        theAI->useRGBAColour = true;
+        theAI->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+        theAI->animation.AnimationTime = 20.f;
+        theAI->animation.IsLooping = true;
+        theAI->animation.IsPlaying = true;
+        theAI->isAnimated = true;
+        theAI->animation.AnimationType = "Animation1";
         theAI->animation.Speed = collectiveSpeed;
         meshArray.push_back(theAI);
     }
@@ -848,24 +873,43 @@ void Update() {
         if (currentMesh->isAnimated) 
         {
             currentMesh->animation.Speed = collectiveSpeed;
-            /*if (collectiveSpeed != 0.f) {
-                temp = collectiveSpeed;
-            }*/
-            switch (currentMesh->currentEasing)
-            {
-            case EaseIn: 
-                currentMesh->RGBAColour = glm::vec4(100.f, 0.f, 0.f, 1.f);
-                break;
-            case EaseOut: 
-                currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 0.f, 1.f);
-                break;
-            case EaseInOut: 
-                currentMesh->RGBAColour = glm::vec4(0.f, 100.f, 0.f, 1.f);
-                break;
-            default:
-                currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
-                break;
+
+            if (currentMesh->animation.AnimationType == "Animation0") {
+                switch (currentMesh->currentEasing)
+                {
+                case EaseIn:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 0.f, 0.f, 1.f);
+                    break;
+                case EaseOut:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 0.f, 1.f);
+                    break;
+                case EaseInOut:
+                    currentMesh->RGBAColour = glm::vec4(0.f, 100.f, 0.f, 1.f);
+                    break;
+                default:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+                    break;
+                }
             }
+            
+            if (currentMesh->animation.AnimationType == "Animation1") {
+                switch (currentMesh->currentEasing2)
+                {
+                case EaseIn:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 0.f, 0.f, 1.f);
+                    break;
+                case EaseOut:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 0.f, 1.f);
+                    break;
+                case EaseInOut:
+                    currentMesh->RGBAColour = glm::vec4(0.f, 100.f, 0.f, 1.f);
+                    break;
+                default:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+                    break;
+                }
+            }
+            
         }
 
         // Uncomment to:
@@ -1007,16 +1051,33 @@ void ReadFromFile() {
 }
 
 void LoadAnimations() {
-    AnimationData yeezin;
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 0.f, EaseIn));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, -10.0f), 5.f, EaseIn));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(-10.0f, 5.0f, 0.0f), 10.f, EaseInOut));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 10.0f), 15.f, EaseOut));
-    yeezin.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 20.f, EaseOut));
-    yeezin.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, None));
-    yeezin.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.0f, true));
-    yeezin.Duration = 20.f;
-    AnimeMan.LoadAnimation("Ease-InOut Animation", yeezin);
+    AnimationData animation0;
+    animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 0.f, EaseIn));
+    animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, -10.0f), 5.f, EaseIn));
+    animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(-10.0f, 5.0f, 0.0f), 10.f, EaseInOut));
+    animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 10.0f), 15.f, EaseOut));
+    animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 20.f, EaseOut));
+    animation0.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, None));
+    animation0.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.0f, true));
+    animation0.Duration = 20.f;
+    AnimeMan.LoadAnimation("Animation0", animation0);
+
+    AnimationData animation1;
+    animation1.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(20.0f, 5.0f, 20.0f), 0.f, EaseInOut));
+    animation1.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(20.0f, 10.0f, -20.0f), 20.f, EaseInOut));
+    animation1.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(20.0f, 5.0f, 20.0f), 40.f, EaseInOut));
+    animation1.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.f, true));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, EaseIn));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(2), 5.0f, EaseIn));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(3), 10.0f, EaseIn));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(4), 15.0f, EaseInOut));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(5), 20.0f, EaseInOut));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(4), 25.0f, EaseInOut));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(3), 30.0f, EaseOut));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(2), 35.0f, EaseOut));
+    animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 40.0f, EaseOut));
+    animation1.Duration = 40.f;
+    AnimeMan.LoadAnimation("Animation1", animation1);
 }
 
 // All lights managed here

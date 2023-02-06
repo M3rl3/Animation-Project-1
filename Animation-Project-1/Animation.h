@@ -40,6 +40,7 @@ struct RotationKeyFrame
 	glm::quat value;
 	float time;
 	bool useSlerp;
+	EasingType type;
 };
 
 struct AnimationData

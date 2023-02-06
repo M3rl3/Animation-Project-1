@@ -1,4 +1,4 @@
-10
+12
 
 bulb
 position -220.0 30.0 0.0
@@ -42,5 +42,15 @@ scale 1.0 1.0 1.0
 
 theAI3
 position 0.0 10.0 0.0
+rotation 0.0 67.55 0.0
+scale 1.0 1.0 1.0
+
+theAI4
+position 20.0 10.0 20.0
+rotation 0.0 67.55 0.0
+scale 1.0 1.0 1.0
+
+theAI5
+position 20.0 10.0 -20.0
 rotation 0.0 67.55 0.0
 scale 1.0 1.0 1.0

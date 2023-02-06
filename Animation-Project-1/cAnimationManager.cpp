@@ -90,7 +90,9 @@ void cAnimationManager::Update(const std::vector<cMeshInfo*>& meshObjects, float
 				mesh->position = GetAnimationPosition(itFind->second, animation.AnimationTime);
 				mesh->scale = GetAnimationScale(itFind->second, animation.AnimationTime);
 				mesh->rotation = GetAnimationRotation(itFind->second, animation.AnimationTime);
-				mesh->currentEasing = GetAnimationEasing(itFind->second, animation.AnimationTime);
+				mesh->currentEasing = GetAnimationEasing(itFind->second, animation.AnimationTime, 0);
+				mesh->currentEasing1 = GetAnimationEasing(itFind->second, animation.AnimationTime, 1);
+				mesh->currentEasing2 = GetAnimationEasing(itFind->second, animation.AnimationTime, 2);
 			}
 		}
 	}
@@ -169,13 +171,30 @@ glm::vec3 cAnimationManager::GetAnimationPosition(const AnimationData& animation
 	return result;
 }
 
-EasingType cAnimationManager::GetAnimationEasing(const AnimationData& animation, float time) 
+EasingType cAnimationManager::GetAnimationEasing(const AnimationData& animation, float time, int value)
 {	
-	if (animation.PositionKeyFrames.size() != 0) {
-		int positionKeyFrameIndex = FindPositionKeyFrameIndex(animation, time);
-		EasingType easing = animation.PositionKeyFrames[positionKeyFrameIndex].type;
-		return easing;
+	if (value == 0) {
+		if (animation.PositionKeyFrames.size() != 0) {
+			int positionKeyFrameIndex = FindPositionKeyFrameIndex(animation, time);
+			EasingType easing = animation.PositionKeyFrames[positionKeyFrameIndex].type;
+			return easing;
+		}
 	}
+	/*else if (value == 1) {
+		if (animation.RotationKeyFrames.size() != 0) {
+			int rotationKeyFrameIndex = FindRotationKeyFrameIndex(animation, time);
+			EasingType easing = animation.RotationKeyFrames[rotationKeyFrameIndex].type;
+			return easing;
+		}
+	}*/
+	else if (value == 2) {
+		if (animation.ScaleKeyFrames.size() != 0) {
+			int scaleKeyFrameIndex = FindScaleKeyFrameIndex(animation, time);
+			EasingType easing = animation.ScaleKeyFrames[scaleKeyFrameIndex].type;
+			return easing;
+		}
+	}
+	else return None;
 }
 
 glm::vec3 cAnimationManager::GetAnimationScale(const AnimationData& animation, float time)

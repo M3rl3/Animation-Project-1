@@ -22,7 +22,7 @@ private:
 	glm::vec3 GetAnimationPosition(const AnimationData& animation, float time);
 	glm::vec3 GetAnimationScale(const AnimationData& animation, float time);
 	glm::quat GetAnimationRotation(const AnimationData& animation, float time);
-	EasingType GetAnimationEasing(const AnimationData& animation, float time);
+	EasingType GetAnimationEasing(const AnimationData& animation, float time, int value);
 
 	// BallBounceAnimation will be stored here
 	std::map<std::string, AnimationData> m_Animations;
