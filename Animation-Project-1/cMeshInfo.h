@@ -61,6 +61,8 @@ public:
 	EasingType currentEasing;
 	EasingType currentEasing1;
 	EasingType currentEasing2;
+	
+	std::string message;
 
 	std::vector <glm::vec3> vertices;
 	std::vector <glm::vec3> indices;

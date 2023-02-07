@@ -107,7 +107,7 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     {
         theEditMode = MOVING_CAMERA;
     }
-    if (key == GLFW_KEY_O && action == GLFW_PRESS)
+    /*if (key == GLFW_KEY_O && action == GLFW_PRESS)
     {
         theEditMode = MOVING_SELECTED_OBJECT;
     }
@@ -116,7 +116,7 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
         theEditMode = TAKE_CONTROL;
         cameraTarget = player_mesh->position;
         cameraEye = player_mesh->position - glm::vec3(20.f, -4.f, 0.f);
-    }
+    }*/
     // Wireframe
     if (key == GLFW_KEY_X && action == GLFW_PRESS) {
         for (int i = 0; i < meshArray.size(); i++) {
@@ -632,6 +632,27 @@ void Render() {
         meshArray.push_back(theAI);
     }
 
+    sModelDrawInfo pyramid_obj;
+    LoadModel(meshFiles[1], pyramid_obj);
+    if (!VAOMan->LoadModelIntoVAO("pyramid", pyramid_obj, shaderID)) {
+        std::cerr << "Could not load model into VAO" << std::endl;
+    }
+
+    {
+        cMeshInfo* theAI = new cMeshInfo();
+        theAI->meshName = "pyramid";
+        theAI->friendlyName = "theAI6";
+        theAI->useRGBAColour = true;
+        theAI->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+        theAI->animation.AnimationTime = 0.f;
+        theAI->animation.IsLooping = true;
+        theAI->animation.IsPlaying = true;
+        theAI->isAnimated = true;
+        theAI->animation.AnimationType = "Animation2";
+        theAI->animation.Speed = collectiveSpeed;
+        meshArray.push_back(theAI);
+    }
+
     // skybox/cubemap textures
     std::cout << "\nLoading Textures...";
 
@@ -874,6 +895,7 @@ void Update() {
         {
             currentMesh->animation.Speed = collectiveSpeed;
 
+            // picks up the easing based on the position
             if (currentMesh->animation.AnimationType == "Animation0") {
                 switch (currentMesh->currentEasing)
                 {
@@ -892,6 +914,7 @@ void Update() {
                 }
             }
             
+            // picks up the easing based on the scale
             if (currentMesh->animation.AnimationType == "Animation1") {
                 switch (currentMesh->currentEasing2)
                 {
@@ -910,6 +933,24 @@ void Update() {
                 }
             }
             
+            // picks up the easing based on the rotation
+            if (currentMesh->animation.AnimationType == "Animation2") {
+                switch (currentMesh->currentEasing1)
+                {
+                case EaseIn:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 0.f, 0.f, 1.f);
+                    break;
+                case EaseOut:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 0.f, 1.f);
+                    break;
+                case EaseInOut:
+                    currentMesh->RGBAColour = glm::vec4(0.f, 100.f, 0.f, 1.f);
+                    break;
+                default:
+                    currentMesh->RGBAColour = glm::vec4(100.f, 100.f, 100.f, 1.f);
+                    break;
+                }
+            }
         }
 
         // Uncomment to:
@@ -961,7 +1002,7 @@ void Update() {
         else {
             glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
         }
-        
+
         
         sModelDrawInfo modelInfo;
         if (VAOMan->FindDrawInfoByModelName(meshArray[i]->meshName, modelInfo)) {
@@ -1050,7 +1091,9 @@ void ReadFromFile() {
     }  
 }
 
+// All animations loaded here
 void LoadAnimations() {
+    // A more position focused animation
     AnimationData animation0;
     animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 0.f, EaseIn));
     animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, -10.0f), 5.f, EaseIn));
@@ -1058,15 +1101,17 @@ void LoadAnimations() {
     animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(0.0f, 5.0f, 10.0f), 15.f, EaseOut));
     animation0.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(10.0f, 5.0f, 0.0f), 20.f, EaseOut));
     animation0.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, None));
-    animation0.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.0f, true));
+    animation0.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.0f, true, EaseIn));
+    animation0.NullKeyFrames.push_back(NullKeyFrame("\nAnimation0: The zero_null frame was called.\n", 0.f));
     animation0.Duration = 20.f;
     AnimeMan.LoadAnimation("Animation0", animation0);
 
+    // A more scale focused animation
     AnimationData animation1;
     animation1.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(20.0f, 5.0f, 20.0f), 0.f, EaseInOut));
     animation1.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(20.0f, 10.0f, -20.0f), 20.f, EaseInOut));
     animation1.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(20.0f, 5.0f, 20.0f), 40.f, EaseInOut));
-    animation1.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.f, true));
+    animation1.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(1, 0, 0, 0), 0.f, true, EaseIn));
     animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, EaseIn));
     animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(2), 5.0f, EaseIn));
     animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(3), 10.0f, EaseIn));
@@ -1076,8 +1121,30 @@ void LoadAnimations() {
     animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(3), 30.0f, EaseOut));
     animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(2), 35.0f, EaseOut));
     animation1.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 40.0f, EaseOut));
+    animation1.NullKeyFrames.push_back(NullKeyFrame("\nAnimation1: The zero_null frame was called.\n", 0.f));
     animation1.Duration = 40.f;
     AnimeMan.LoadAnimation("Animation1", animation1);
+
+    // A more rotation focused animation
+    AnimationData animation2;
+    animation2.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(-20.0f, 5.0f, 0.0f), 0.f, None));
+    animation2.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(-30.0f, 5.0f, 0.0f), 20.f, None));
+    animation2.PositionKeyFrames.push_back(PositionKeyFrame(glm::vec3(-20.0f, 5.0f, 0.0f), 40.f, None));
+    animation2.ScaleKeyFrames.push_back(ScaleKeyFrame(glm::vec3(1), 0.0f, EaseIn));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0, 0, 0), 0.f, true, EaseIn));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0.01f, 0, 0), 5.f, true, EaseIn));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0.02f, 0, 0), 10.f, true, EaseIn));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0.03f, 0, 0), 15.f, true, EaseInOut));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0.04f, 0, 0), 20.f, true, EaseInOut));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0.03f, 0, 0), 25.f, true, EaseInOut));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0.02f, 0, 0), 30.f, true, EaseOut));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0.01f, 0, 0), 35.f, true, EaseOut));
+    animation2.RotationKeyFrames.push_back(RotationKeyFrame(glm::quat(0, 0, 0, 0), 40.f, true, EaseOut));
+    
+    animation2.NullKeyFrames.push_back(NullKeyFrame("\nAnimation2: The zero_null frame was called.\n", 0.f));
+    animation2.Duration = 40.f;
+    AnimeMan.LoadAnimation("Animation2", animation2);
+
 }
 
 // All lights managed here

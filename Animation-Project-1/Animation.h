@@ -35,12 +35,20 @@ struct ScaleKeyFrame
 
 struct RotationKeyFrame
 {
-	RotationKeyFrame(glm::quat value, float time, bool useSlerp)
-		: value(value), time(time), useSlerp(useSlerp) { }
+	RotationKeyFrame(glm::quat value, float time, bool useSlerp, EasingType type = None)
+		: value(value), time(time), useSlerp(useSlerp), type(type) { }
 	glm::quat value;
 	float time;
 	bool useSlerp;
 	EasingType type;
+};
+
+struct NullKeyFrame 
+{
+	NullKeyFrame(std::string data, float time) 
+		: data(data), time(time) { }
+	std::string data;
+	float time;
 };
 
 struct AnimationData
@@ -48,6 +56,7 @@ struct AnimationData
 	std::vector<PositionKeyFrame> PositionKeyFrames;
 	std::vector<ScaleKeyFrame> ScaleKeyFrames;
 	std::vector<RotationKeyFrame> RotationKeyFrames;
+	std::vector<NullKeyFrame> NullKeyFrames;
 	float Duration;
 };
 

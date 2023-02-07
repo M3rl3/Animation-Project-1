@@ -18,10 +18,12 @@ private:
 	int FindPositionKeyFrameIndex(const AnimationData& animation, float time);
 	int FindScaleKeyFrameIndex(const AnimationData& animation, float time);
 	int FindRotationKeyFrameIndex(const AnimationData& animation, float time);
+	int FindNullKeyFrameIndex(const AnimationData& animation, float time);
 
 	glm::vec3 GetAnimationPosition(const AnimationData& animation, float time);
 	glm::vec3 GetAnimationScale(const AnimationData& animation, float time);
 	glm::quat GetAnimationRotation(const AnimationData& animation, float time);
+	std::string GetAnimationNullFrame(const AnimationData& animation, float time);
 	EasingType GetAnimationEasing(const AnimationData& animation, float time, int value);
 
 	// BallBounceAnimation will be stored here

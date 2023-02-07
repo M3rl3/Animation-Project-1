@@ -89,7 +89,15 @@ void cAnimationManager::Update(const std::vector<cMeshInfo*>& meshObjects, float
 
 				mesh->position = GetAnimationPosition(itFind->second, animation.AnimationTime);
 				mesh->scale = GetAnimationScale(itFind->second, animation.AnimationTime);
-				mesh->rotation = GetAnimationRotation(itFind->second, animation.AnimationTime);
+				
+				glm::quat tempRot = GetAnimationRotation(itFind->second, animation.AnimationTime);
+				glm::vec3 vec_tempRot = glm::vec3(tempRot.x, tempRot.y, tempRot.z);
+
+				mesh->AdjustRoationAngleFromEuler(vec_tempRot);
+
+				mesh->message = GetAnimationNullFrame(itFind->second, animation.AnimationTime);
+				std::cout << mesh->message;
+
 				mesh->currentEasing = GetAnimationEasing(itFind->second, animation.AnimationTime, 0);
 				mesh->currentEasing1 = GetAnimationEasing(itFind->second, animation.AnimationTime, 1);
 				mesh->currentEasing2 = GetAnimationEasing(itFind->second, animation.AnimationTime, 2);
@@ -129,6 +137,17 @@ int cAnimationManager::FindRotationKeyFrameIndex(const AnimationData& animation,
 	}
 
 	return animation.RotationKeyFrames.size() - 1;
+}
+
+int cAnimationManager::FindNullKeyFrameIndex(const AnimationData& animation, float time)
+{
+	for (int i = 0; i < animation.NullKeyFrames.size(); i++)
+	{
+		if (animation.NullKeyFrames[i].time > time)
+			return i - 1;
+	}
+
+	return animation.NullKeyFrames.size() - 1;
 }
 
 glm::vec3 cAnimationManager::GetAnimationPosition(const AnimationData& animation, float time)
@@ -180,13 +199,13 @@ EasingType cAnimationManager::GetAnimationEasing(const AnimationData& animation,
 			return easing;
 		}
 	}
-	/*else if (value == 1) {
+	else if (value == 1) {
 		if (animation.RotationKeyFrames.size() != 0) {
 			int rotationKeyFrameIndex = FindRotationKeyFrameIndex(animation, time);
 			EasingType easing = animation.RotationKeyFrames[rotationKeyFrameIndex].type;
 			return easing;
 		}
-	}*/
+	}
 	else if (value == 2) {
 		if (animation.ScaleKeyFrames.size() != 0) {
 			int scaleKeyFrameIndex = FindScaleKeyFrameIndex(animation, time);
@@ -214,6 +233,25 @@ glm::vec3 cAnimationManager::GetAnimationScale(const AnimationData& animation, f
 	float difference = nextScaleKeyFrame.time - scaleKeyFrame.time;
 	float ratio = (time - scaleKeyFrame.time) / difference;
 
+	switch (scaleKeyFrame.type)
+	{
+	case EaseIn:
+		ratio = glm::sineEaseIn(ratio);
+		break;
+
+	case EaseOut:
+		ratio = glm::sineEaseOut(ratio);
+		break;
+
+	case EaseInOut:
+		ratio = glm::sineEaseInOut(ratio);
+		break;
+
+	case None:
+	default:
+		break;
+	}
+
 	glm::vec3 result = glm::mix(scaleKeyFrame.value, nextScaleKeyFrame.value, ratio);
 
 	return result;
@@ -235,6 +273,25 @@ glm::quat cAnimationManager::GetAnimationRotation(const AnimationData& animation
 	float difference = nextRotationKeyFrame.time - rotationKeyFrame.time;
 	float ratio = (time - rotationKeyFrame.time) / difference;
 
+	switch (rotationKeyFrame.type)
+	{
+	case EaseIn:
+		ratio = glm::sineEaseIn(ratio);
+		break;
+
+	case EaseOut:
+		ratio = glm::sineEaseOut(ratio);
+		break;
+
+	case EaseInOut:
+		ratio = glm::sineEaseInOut(ratio);
+		break;
+
+	case None:
+	default:
+		break;
+	}
+
 	glm::quat result;
 	if (rotationKeyFrame.useSlerp)
 		result = glm::slerp(rotationKeyFrame.value, nextRotationKeyFrame.value, ratio);
@@ -242,4 +299,13 @@ glm::quat cAnimationManager::GetAnimationRotation(const AnimationData& animation
 		result = glm::mix(rotationKeyFrame.value, nextRotationKeyFrame.value, ratio);
 
 	return result;
+}
+
+std::string cAnimationManager::GetAnimationNullFrame(const AnimationData& animation, float time)
+{
+	if (animation.NullKeyFrames.size() != 0) {
+		int nullKeyFrameIndex = FindNullKeyFrameIndex(animation, time);
+		std::string message = animation.NullKeyFrames[nullKeyFrameIndex].data;
+		return message;
+	}
 }
